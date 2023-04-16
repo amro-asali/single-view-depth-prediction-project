@@ -10,7 +10,7 @@ from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras.preprocessing.image import load_img
 
 
-def estimateDepth(real_world_height):
+def estimateDepth(real_world_height,focal_length,censor_height):
     # Load the trained model
     model = load_model('model')
 
@@ -36,7 +36,7 @@ def estimateDepth(real_world_height):
 
         # Calculate the depth of the object in the image
         object_height_pixels = y_end - y_start
-        object_depth_cm = (h * real_world_height * 4.1) / (object_height_pixels * 5.22)
+        object_depth_cm = (h * real_world_height * focal_length) / (object_height_pixels * censor_height)
 
         # Draw the bounding box and depth value on the image, then display it
         cv2.rectangle(resized_image, (x_start, y_start), (x_start, y_end), (0, 255, 0), 2)
@@ -50,4 +50,4 @@ def estimateDepth(real_world_height):
 
 if __name__ == '__main__':
     # estimate depth for an suv with known real world height of 1.57 meters
-    estimateDepth(1.57)
+    estimateDepth(real_world_height=1.57,focal_length=4.1,censor_height=5.22)
